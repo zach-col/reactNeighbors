@@ -13,13 +13,16 @@ class Navbar extends Component {
   render() {
     return (
       <div>
+      <span  style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
         <div id="mySidenav" className="sidenav">
           <a href="javascript:void(0)" className="closebtn" onClick={this.closeNav}>×</a>
           <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span><input type="search" name="search"/>
-          <a href="#">Restaurant</a>
-          <p className="restaurantName">Restaurant</p>
+          {this.props.locations.map((location) => (
+            <a key={location.id} className='restaurantName'>
+              <p>{location.title}</p>
+            </a>
+          ))}
         </div>
-        <span  style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
       </div>
     )
   }
