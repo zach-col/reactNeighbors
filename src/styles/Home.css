@@ -45,3 +45,10 @@ body {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
 }
+/* google maps */
+.infoTitle {
+    color: white;
+    background-color:black;
+    font-size: 25px;
+}
+

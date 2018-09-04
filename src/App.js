@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Navbar from './Navbar'
+import Map from './Map'
+
 class App extends Component {
   state = {
     locations: [
@@ -27,6 +29,7 @@ class App extends Component {
     return (
       <div>
         <Navbar locations={this.state.locations} />
+        <Map />
       </div>
     )
   }
