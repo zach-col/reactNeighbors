@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import GoogleMapLocations from './Locations'
-
+import Navbar from './Navbar'
 class App extends Component {
   state = {
     locations: [
@@ -27,6 +27,7 @@ class App extends Component {
   render() {
     return (
       <div>
+      <Navbar />
         <GoogleMapLocations locations={this.state.locations} />
       </div>
     )
