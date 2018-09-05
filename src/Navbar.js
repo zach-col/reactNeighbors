@@ -18,8 +18,8 @@ class Navbar extends Component {
           <a href="javascript:void(0)" className="closebtn" onClick={this.closeNav}>×</a>
           <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span><input type="search" name="search"/>
           {this.props.locations.map((location) => (
-            <a key={location.id} className='restaurantName'>
-              <p>{location.title}</p>
+            <a key={location.id} className='restaurantName' href={location.title}>
+              {location.title}
             </a>
           ))}
         </div>
