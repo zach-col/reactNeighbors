@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
+import Maps from './Map'
+
 import './styles/Home.css';
 
 class Navbar extends Component {
@@ -20,10 +22,10 @@ class Navbar extends Component {
 
   updateQuery = (query) => {
     this.setState({ query: query.trim() })
-    let showingLocations
-    const match = new RegExp(escapeRegExp(query), 'i')
-    showingLocations = this.props.locations.filter((location) => match.test(location.title))
-    this.setState({searchQueryLocations: showingLocations})
+      let showingLocations
+      const match = new RegExp(escapeRegExp(query), 'i')
+      showingLocations = this.props.locations.filter((location) => match.test(location.title))
+      this.setState({searchQueryLocations: showingLocations})
   }
 
   render() {
@@ -42,6 +44,7 @@ class Navbar extends Component {
             </a>
           ))}
         </div>
+        <Maps searchLocations={this.state.searchQueryLocations} />
       </div>
     )
   }

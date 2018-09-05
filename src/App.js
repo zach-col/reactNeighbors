@@ -7,21 +7,33 @@ class App extends Component {
     locations: [
       {
         "id": "01",
-        "title": "pseudo ville",
-        "lat": "1111.1111",
-        "lng": "122435.3"
+        "title": "Park Ave Penthouse",
+        "lat": "40.7713024",
+        "lng": "-73.9632393"
       },
       {
         "id": "02",
-        "title": "simple ville",
-        "lat": "1111.1111",
-        "lng": "122435.3"
+        "title": "Chelsea Loft",
+        "lat": "40.7444883",
+        "lng": "-73.9949465"
       },
       {
         "id": "03",
-        "title": "Beta ville",
-        "lat": "1111.1111",
-        "lng": "122435.3"
+        "title": "Union Square Open Floor Plan",
+        "lat": "40.7347062",
+        "lng": "-73.9895759"
+      },
+      {
+        "id": "04",
+        "title": "East Village Hip Studio",
+        "lat": "40.7281777",
+        "lng": "-73.984377"
+      },
+      {
+        "id": "05",
+        "title": "TriBeCa Artsy Bachelor Pad",
+        "lat": "40.7195264",
+        "lng": "-74.0089934"
       }
     ]
   }
@@ -31,8 +43,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar locations={this.state.locations} />
-        <Maps />
+        <Navbar locations={this.state.locations}/>
       </div>
     )
   }
