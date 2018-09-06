@@ -35,15 +35,17 @@ class App extends Component {
         "lat": "40.7195264",
         "lng": "-74.0089934"
       }
-    ]
+    ],
+    mapsLocations: [1,2,3]
   }
+
 
 
 
   render() {
     return (
       <div>
-        <Navbar locations={this.state.locations}/>
+        <Navbar locations={this.state.locations} mapsLocations={this.state.locations}/>
       </div>
     )
   }

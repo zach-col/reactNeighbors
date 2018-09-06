@@ -17,7 +17,7 @@ class Navbar extends Component {
 
   state = {
     query: '',
-    searchQueryLocations: this.props.locations
+    searchQueryLocations: this.props.locations,
   }
 
   updateQuery = (query) => {
@@ -28,8 +28,9 @@ class Navbar extends Component {
       this.setState({searchQueryLocations: showingLocations})
   }
 
-  render() {
 
+
+  render() {
     return (
       <div>
       <span  style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
@@ -39,12 +40,13 @@ class Navbar extends Component {
           <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span>
           <input type="text" name="search" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
           {this.state.searchQueryLocations.map((location) => (
-            <a key={location.id} className='restaurantName' href={location.title}>
+            <a key={location.id} className='restaurantName' href="#" onClick={this.onLinkClick}
+>
               {location.title}
             </a>
           ))}
         </div>
-        <Maps searchLocations={this.state.searchQueryLocations} />
+        <Maps searchLocations={this.state.searchQueryLocations} mapsLocations={this.props.mapsLocations}/>
       </div>
     )
   }

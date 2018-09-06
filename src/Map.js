@@ -7,12 +7,14 @@ export class Maps extends Component {
     showingInfoWindow: false
   };
 
-  onMarkerClick = (props, marker) =>
+  onMarkerClick = (props, marker) =>{
+    console.log("this is props " + this.state.selectedPlace)
     this.setState({
       activeMarker: marker,
       selectedPlace: props,
       showingInfoWindow: true
     });
+  }
 
   onInfowWindowClose = () =>
     this.setState({
@@ -29,10 +31,24 @@ export class Maps extends Component {
   }
 
 
+
+
   render() {
-    console.log(this.props.searchLocations)
+
+
+const newList = this.props.searchLocations.map((location) => 
+
+            <Marker
+              key={location.id}
+              name={location.title}
+              onClick={this.onMarkerClick}
+              position={{ lat: location.lat, lng: location.lng}}
+            />
+          )
+
     if (!this.props.loaded) return <div>Loading</div>
       return (
+        <div>
         <Map
           className="map"
           google={this.props.google}
@@ -62,6 +78,7 @@ export class Maps extends Component {
           </div>
         </InfoWindow>
       </Map>
+      </div>
     );
   }
 
