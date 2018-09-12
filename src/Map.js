@@ -1,89 +1,59 @@
 import React, { Component}  from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react'
+import './styles/Home.css';
 export class Maps extends Component {
-  state= {
+  state = {
     activeMarker: {},
     selectedPlace: {},
-    showingInfoWindow: false
+    showingInfoWindow: false,
+    map: {}
   };
 
-  onMarkerClick = (props, marker) =>{
-    console.log("this is props " + this.state.selectedPlace)
-    this.setState({
-      activeMarker: marker,
-      selectedPlace: props,
-      showingInfoWindow: true
+  componentDidMount() {
+    this.initMap()
+  }
+  initMap(){
+    var markers = []
+
+    const map = new window.google.maps.Map(document.getElementById('map'), {
+      center: { lat: 40.7413549, lng: -73.9980244},
+      zoom: 13
     });
+    this.setState({map: map})
+    var bounds = new window.google.maps.LatLngBounds();
+    for (var i = 0; i< this.props.mapLocations.length; i++) {
+      // Get the position from the location array.
+      var position = this.props.mapLocations[i].location;
+      var title = this.props.mapLocations[i].title;
+      // Create a marker per location, and put into markers array.
+      var marker = new window.google.maps.Marker({
+        position: {lat: this.props.mapLocations[i].location.lat, lng: this.props.mapLocations[i].location.lng},
+        title: this.props.mapLocations[i].title,
+        animation: window.google.maps.Animation.DROP,
+        id: this.props.mapLocations[i].id
+      });
+      markers.push(marker);
+      this.setState({markers: markers})
+      marker.setMap(map);
+      bounds.extend(marker.position);
+    }
+    map.fitBounds(bounds);
   }
-
-  onInfowWindowClose = () =>
-    this.setState({
-      activeMarker: null,
-      showingInfoWindow: false
-    })
-
-  onMapClicked = () => {
-    if(this.state.showingInfoWindow)
-      this.setState({
-        activeMarker: null,
-        showingInfoWindow: false
-      })
-  }
-
-
-
 
   render() {
-
-
-const newList = this.props.searchLocations.map((location) => 
-
-            <Marker
-              key={location.id}
-              name={location.title}
-              onClick={this.onMarkerClick}
-              position={{ lat: location.lat, lng: location.lng}}
-            />
-          )
-
-    if (!this.props.loaded) return <div>Loading</div>
+    console.log(this.props.mapLocations[1].location)
+    console.log(this.state.markers)
+    console.log("this is map", this.state.map)
+    if (!this.props.google) return <div>Loading</div>
       return (
-        <div>
-        <Map
-          className="map"
-          google={this.props.google}
-          onClick={this.onMapCLicked}
-          initialCenter={{
-            lat: 40.7413549, lng: -73.9980244
-          }}
-          style={{height: '92vh', position: 'relative', width: '100%'}}
-          zoom={13}>
-
-          {this.props.searchLocations.map((location) => (
-            <Marker
-              key={location.id}
-              name={location.title}
-              onClick={this.onMarkerClick}
-              position={{ lat: location.lat, lng: location.lng}}
-            />
-          ))}
-
-
-        <InfoWindow
-          marker={this.state.activeMarker}
-          onClose={this.onInfoWindowClose}
-          visible={this.state.showingInfoWindow}>
-          <div>
-            <p>{this.state.selectedPlace.name}</p>
+      <div>
+        <div className="container-fluid">
+          <div className="map" id="map">
           </div>
-        </InfoWindow>
-      </Map>
+        </div>
       </div>
     );
   }
 
 }
-
-export default GoogleApiWrapper({
-  apiKey: ('AIzaSyBVoR4zb_hPaWYftpFW1EFWn12SCQePXjo')
-})(Maps)
+export default Maps
