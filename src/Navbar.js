@@ -30,7 +30,7 @@ class Navbar extends Component {
 
     return (
       <div>
-      <span  style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
+      <span tabindex="0" style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
       {JSON.stringify(this.state.searchQueryLocations)}
         <div id="mySidenav" className="sidenav">
           <a href="javascript:void(0)" className="closebtn" onClick={this.closeNav}>×</a>
