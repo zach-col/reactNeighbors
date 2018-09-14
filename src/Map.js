@@ -2,19 +2,22 @@ import React, { Component}  from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react'
 import './styles/Home.css';
 export class Maps extends Component {
+
   state = {
     activeMarker: {},
     selectedPlace: {},
     showingInfoWindow: false,
-    map: {}
+    map: {},
+    newMarkers: []
   };
 
   componentDidMount() {
+
     this.initMap()
   }
   initMap(){
-    var markers = []
 
+    const markers = []
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: { lat: 40.7413549, lng: -73.9980244},
       zoom: 13
@@ -33,7 +36,8 @@ export class Maps extends Component {
         id: this.props.mapLocations[i].id
       });
       markers.push(marker);
-      this.setState({markers: markers})
+      var newMarkers = this.state.newMarkers
+      this.setState(newMarkers: markers);
       marker.setMap(map);
       bounds.extend(marker.position);
     }
@@ -41,9 +45,7 @@ export class Maps extends Component {
   }
 
   render() {
-    console.log(this.props.mapLocations[1].location)
-    console.log(this.state.markers)
-    console.log("this is map", this.state.map)
+    console.log(this.state.newMarkers)
     if (!this.props.google) return <div>Loading</div>
       return (
       <div>
