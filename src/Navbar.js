@@ -30,18 +30,8 @@ class Navbar extends Component {
 
     return (
       <div>
-      <span tabindex="0" style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
-      {JSON.stringify(this.state.searchQueryLocations)}
-        <div id="mySidenav" className="sidenav">
-          <a href="javascript:void(0)" className="closebtn" onClick={this.closeNav}>×</a>
-          <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span>
-          <input type="text" name="search" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
-          {this.state.searchQueryLocations.map((location) => (
-            <a key={location.id} className='restaurantName' href={location.title}>
-              {location.title}
-            </a>
-          ))}
-        </div>
+      <span tabIndex="0" style={{fontSize: 30, cursor: 'pointer'}} onClick={this.openNav}>&#9776; Neighbors</span>
+
       </div>
     )
   }
