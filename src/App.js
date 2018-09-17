@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react'
-import Navbar from './Navbar'
 import Maps from './Map'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'

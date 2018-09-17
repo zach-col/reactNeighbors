@@ -20,7 +20,8 @@ export class Maps extends Component {
     map: {},
     markers: [],
     query: '',
-    searchQueryLocations: []
+    searchQueryLocations: [],
+    infoWindow: {}
   };
 
   checkMarkersState(){
@@ -57,6 +58,7 @@ export class Maps extends Component {
 
       marker.addListener('click', () => {
         this.populateInfoWindow(marker, largeInfoWindow)
+        this.setState({infoWindow: largeInfoWindow})
       });
 
       this.setState(prevState => ({
@@ -84,7 +86,10 @@ export class Maps extends Component {
     }
   }
 
+
+
   updateQuery = (query) => {
+        var largeInfoWindow = new window.google.maps.InfoWindow();
     this.setState({ query: query.trim() })
       for (var i = 0; i < this.state.markers.length; i++) {
         this.state.markers[i].setVisible(false);
@@ -95,22 +100,24 @@ export class Maps extends Component {
       showingLocations = this.state.markers.filter((location) => match.test(location.title))
       this.setState({searchQueryLocations: showingLocations})
       this.setState({markers: showingLocations})
-      console.log(this.state.markers)
-
   }
+
+    hrefMarkerLink = (index) => {
+        window.google.maps.event.trigger(this.state.markers[index], 'click');
+    }
 
   render() {
     if (!this.props.google) return <div>Oops something went wrong please try again later</div>
       return (
       <div>
         <div className="container-fluid">
-          <span tabIndex="0" style={{fontSize: 30, cursor: 'pointer'}} onClick={this.props.openNav}>&#9776; Neighbors</span>
+          <span tabIndex="0" style={{fontSize: '6vh', cursor: 'pointer'}} onClick={this.props.openNav}>&#9776; Neighbors</span>
           <div id="mySidenav" className="sidenav">
             <a href="javascript:void(0)" className="closebtn" onClick={this.props.closeNav}>×</a>
             <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span>
             <input type="text" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
-            {this.state.searchQueryLocations.map((location) => (
-              <a key={location.id} className='restaurantName'>
+            {this.state.markers.map((location, index) => (
+              <a key={location.id} className='restaurantName' onClick={(event) => this.hrefMarkerLink(index)}>
                 {location.title}
               </a>
             ))}
@@ -118,7 +125,6 @@ export class Maps extends Component {
           <div className="map" id="map">
           </div>
         </div>
-        <a href="javascript:void(0)" className="closebtn" onClick={this.checkMarkersState.bind(this)}>check markers state</a>
       </div>
     );
   }
