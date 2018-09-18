@@ -42,7 +42,7 @@ export class Maps extends Component {
     this.setState({map: this.map})
   }
   initMarkers(){
-    var largeInfoWindow = new window.google.maps.InfoWindow();
+
     var bounds = new window.google.maps.LatLngBounds();
     for (var i = 0; i< this.state.locations.length; i++) {
       // Get the position from the location array.
@@ -55,16 +55,23 @@ export class Maps extends Component {
         animation: window.google.maps.Animation.DROP,
         id: this.state.locations[i].id
       });
-
-      marker.addListener('click', () => {
-        this.populateInfoWindow(marker, largeInfoWindow)
-        this.setState({infoWindow: largeInfoWindow})
+      // set markers infowindow
+      marker.infowindow = new window.google.maps.InfoWindow({
+        content: marker.title,
+        animation: window.google.maps.Animation.DROP
       });
-
+      // populate marker infowindow on marker click
+      marker.addListener('click', () => {
+        this.populateInfoWindow(marker)
+      });
+      // stop marker bounce on marker click
+      marker.infowindow.addListener('closeclick', () => {
+        marker.setAnimation(null);
+      });
+      // set markers state
       this.setState(prevState => ({
         markers: [...prevState.markers, marker]
       }))
-
 
       marker.setMap(this.map);
       bounds.extend(marker.position);
@@ -73,23 +80,34 @@ export class Maps extends Component {
     this.map.fitBounds(bounds);
   }
 
-  populateInfoWindow = (marker, infowindow) => {
-    // Check to make sure the infowindow is not already opened on this marker.
-    if (infowindow.marker != marker) {
-      infowindow.marker = marker;
-      infowindow.setContent('<div>' + marker.title + '</div>');
-      infowindow.open(this.map, marker);
-      // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick', function() {
-        infowindow.marker = null;
-      });
-    }
+  populateInfoWindow = (marker) => {
+        // set clicked marker to selected place then check if its active marker
+        this.setState(this.state.selectedPlace: marker)
+        if(this.state.selectedPlace === this.state.activeMarker){
+          return 
+        }
+        // show info window of clicked marker and close all others
+        else if(this.state.selectedPlace !== this.state.activeMarker){
+          for (var i = 0; i < this.state.markers.length; i++) {
+            if(marker === this.state.markers[i] ){
+              // bounce marker
+              marker.setAnimation(window.google.maps.Animation.BOUNCE);
+              marker.infowindow.open(this.map, marker);
+              this.setState({activeMarker: marker})
+
+            } else{
+                // close info window
+                this.state.markers[i].infowindow.close();
+                // stop bouncing
+                this.state.markers[i].setAnimation(null);
+            }
+          }
+        }    
   }
 
 
-
   updateQuery = (query) => {
-        var largeInfoWindow = new window.google.maps.InfoWindow();
+    var largeInfoWindow = new window.google.maps.InfoWindow();
     this.setState({ query: query.trim() })
       for (var i = 0; i < this.state.markers.length; i++) {
         this.state.markers[i].setVisible(false);
@@ -104,6 +122,7 @@ export class Maps extends Component {
 
     hrefMarkerLink = (index) => {
         window.google.maps.event.trigger(this.state.markers[index], 'click');
+
     }
 
   render() {
