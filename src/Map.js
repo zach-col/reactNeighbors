@@ -78,55 +78,82 @@ export class Maps extends Component {
     }
 
     this.map.fitBounds(bounds);
+
   }
 
   populateInfoWindow = (marker) => {
-        // set clicked marker to selected place then check if its active marker
-        this.setState(this.state.selectedPlace: marker)
-        if(this.state.selectedPlace === this.state.activeMarker){
-          return 
+    // set clicked marker to selected place then check if its active marker
+    this.setState(this.state.selectedPlace: marker)
+    if(this.state.selectedPlace === this.state.activeMarker){
+      return 
+    }
+    // show info window of clicked marker and close all others
+    else if(this.state.selectedPlace !== this.state.activeMarker){
+      for (var i = 0; i < this.state.markers.length; i++) {
+        if(marker === this.state.markers[i] ){
+          // bounce marker
+          marker.setAnimation(window.google.maps.Animation.BOUNCE);
+          marker.infowindow.open(this.map, marker);
+          this.setState({activeMarker: marker})
+
+        } else{
+            // close info window
+            this.state.markers[i].infowindow.close();
+            // stop bouncing
+            this.state.markers[i].setAnimation(null);
         }
-        // show info window of clicked marker and close all others
-        else if(this.state.selectedPlace !== this.state.activeMarker){
-          for (var i = 0; i < this.state.markers.length; i++) {
-            if(marker === this.state.markers[i] ){
-              // bounce marker
-              marker.setAnimation(window.google.maps.Animation.BOUNCE);
-              marker.infowindow.open(this.map, marker);
-              this.setState({activeMarker: marker})
-
-            } else{
-                // close info window
-                this.state.markers[i].infowindow.close();
-                // stop bouncing
-                this.state.markers[i].setAnimation(null);
-            }
-          }
-        }    
+      }
+    }    
   }
-
 
   updateQuery = (query) => {
-    var largeInfoWindow = new window.google.maps.InfoWindow();
-    this.setState({ query: query.trim() })
-      for (var i = 0; i < this.state.markers.length; i++) {
-        this.state.markers[i].setVisible(false);
-      }
-
-      let showingLocations
-      const match = new RegExp(escapeRegExp(query), 'i')
-      showingLocations = this.state.markers.filter((location) => match.test(location.title))
-      this.setState({searchQueryLocations: showingLocations})
-      this.setState({markers: showingLocations})
+    this.setState({ query: query})
   }
 
-    hrefMarkerLink = (index) => {
-        window.google.maps.event.trigger(this.state.markers[index], 'click');
-
+  closeAllInfoWindows(){
+    for (var i = 0; i < this.state.markers.length; i++) {
+      // close info window
+      this.state.markers[i].infowindow.close();
+      // stop bouncing
+      this.state.markers[i].setAnimation(null);
     }
+  }
+
+  hrefMarkerLink = (marker) => {
+    this.closeAllInfoWindows()
+    marker.setAnimation(window.google.maps.Animation.BOUNCE);
+    marker.infowindow.open(this.map, marker);
+    console.log(marker)
+  }
 
   render() {
     if (!this.props.google) return <div>Oops something went wrong please try again later</div>
+    {/* show all locations in nav by default */}
+    const search = []
+    for (var i = 0; i < this.state.markers.length; i++) {
+      const title = this.state.markers[i].title.toLowerCase()
+      if(title.includes(this.state.query)){
+          search.push(this.state.markers[i])
+      } else {
+
+      }
+    }
+    {/* show all markers on map by default */}
+    if(this.state.query){
+      this.closeAllInfoWindows()
+      for (var i = 0; i < this.state.markers.length; i++) {
+        if(this.state.markers[i].title.toLowerCase().includes(this.state.query.toLowerCase())){
+          this.state.markers[i].setVisible(true);
+        } else {
+          this.state.markers[i].setVisible(false)
+        }
+      }
+    } else {
+      for (var i = 0; i < this.state.markers.length; i++) {
+        this.state.markers[i].setVisible(true)
+      }
+    }
+
       return (
       <div>
         <div className="container-fluid">
@@ -135,8 +162,8 @@ export class Maps extends Component {
             <a href="javascript:void(0)" className="closebtn" onClick={this.props.closeNav}>×</a>
             <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span>
             <input type="text" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
-            {this.state.markers.map((location, index) => (
-              <a key={location.id} className='restaurantName' onClick={(event) => this.hrefMarkerLink(index)}>
+            {search.map((location) => (
+              <a key={location.id} className='restaurantName' onClick={(event) => this.hrefMarkerLink(location)}>
                 {location.title}
               </a>
             ))}
