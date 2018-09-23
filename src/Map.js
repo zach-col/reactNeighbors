@@ -23,17 +23,13 @@ export class Maps extends Component {
     searchQueryLocations: [],
     infoWindow: {}
   };
-
-  checkMarkersState(){
-    console.log(this.state.markers)
-    console.log(this.state.searchQueryLocations)
-  }
-
+  // load map and markers on init load
   componentDidMount() {
     this.initMap()
     this.initMarkers()
     this.setState({searchQueryLocations: this.state.locations})
   }
+  // load map
   initMap(){
       this.map = new window.google.maps.Map(document.getElementById('map'), {
       center: { lat: 40.7413549, lng: -73.9980244},
@@ -41,6 +37,7 @@ export class Maps extends Component {
     });
     this.setState({map: this.map})
   }
+  // load markers
   initMarkers(){
 
     var bounds = new window.google.maps.LatLngBounds();
@@ -105,11 +102,11 @@ export class Maps extends Component {
       }
     }    
   }
-
+  // update search query state
   updateQuery = (query) => {
     this.setState({ query: query})
   }
-
+  // close all infowindows and stop animation
   closeAllInfoWindows(){
     for (var i = 0; i < this.state.markers.length; i++) {
       // close info window
@@ -118,7 +115,7 @@ export class Maps extends Component {
       this.state.markers[i].setAnimation(null);
     }
   }
-
+  /* show marker infowindow and animate if you click marker link */
   hrefMarkerLink = (marker) => {
     this.closeAllInfoWindows()
     marker.setAnimation(window.google.maps.Animation.BOUNCE);
@@ -140,15 +137,18 @@ export class Maps extends Component {
     }
     {/* show all markers on map by default */}
     if(this.state.query){
-      this.closeAllInfoWindows()
       for (var i = 0; i < this.state.markers.length; i++) {
+        {/* show marker if it matches search query */}
         if(this.state.markers[i].title.toLowerCase().includes(this.state.query.toLowerCase())){
           this.state.markers[i].setVisible(true);
         } else {
+          {/* hide marker if it does not match search query*/}
           this.state.markers[i].setVisible(false)
+          this.state.markers[i].infowindow.close();
         }
       }
     } else {
+    { /* if there is no query load all markers */}
       for (var i = 0; i < this.state.markers.length; i++) {
         this.state.markers[i].setVisible(true)
       }
