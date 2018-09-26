@@ -29,7 +29,7 @@ gm_authFailure(){
     query: '',
     searchQueryLocations: [],
     infoWindow: {},
-    items: '',
+    items: {},
     isLoaded: false,
   };
   // load map and markers on init load
@@ -49,14 +49,6 @@ gm_authFailure(){
     })
     this.setState({map: this.map})
   }
-  markerDemo(){
-    return  fetch('https://api.foursquare.com/v2/venues/explore?client_id=UE5J2YQR0H21JC5PSRFVRR3ALNJYBAJPFCNH4VD2TQBRESFC&client_secret=3UYPCCJFLXKTWZUPG01H20IAEAQTULCOSST2QDIJR34H5RGP&v=20180323&limit=1&ll=40.7243,-74.0018&query=coffee&limit=1')
-    .then((res) => { return res.json()})
-    .then((result) => {
-
-      return result['response'].headerFullLocation
-    })
-  }
 
   // load markers
   initMarkers(){
@@ -64,18 +56,36 @@ gm_authFailure(){
     var bounds = new window.google.maps.LatLngBounds();
 
     for (var i = 0; i< this.state.locations.length; i++) {
-    this.markerDemo().then(result => {
-      console.log(result + " is a " + typeof result)
-      this.setState({items: "test if woking"})
-    })
+    const newObject = ""
+    fetch('https://api.foursquare.com/v2/venues/explore?client_id=UE5J2YQR0H21JC5PSRFVRR3ALNJYBAJPFCNH4VD2TQBRESFC&client_secret=3UYPCCJFLXKTWZUPG01H20IAEAQTULCOSST2QDIJR34H5RGP&v=20180323&limit=1&ll=40.7243,-74.0018&query=coffee&limit=1')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          const object = result['response'].headerFullLocation
+          this.newObject = object
+          this.setState({
+            isLoaded: true,
+            items: object
+          });
+          console.log(this.state.items)
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+
       // Get the position from the location array.
       const position = this.state.locations[i].location;
       const title = this.state.locations[i].title;
+      const info = this.state.items;
       // Create a marker per location, and put into markers array.
       const marker = new window.google.maps.Marker({
         position: {lat: this.state.locations[i].location.lat, lng: this.state.locations[i].location.lng},
         title: this.state.locations[i].title,
-        info: this.state.items,
+        info: info,
         animation: window.google.maps.Animation.DROP,
         id: this.state.locations[i].id
       });

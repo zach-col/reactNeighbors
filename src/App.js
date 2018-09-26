@@ -4,6 +4,7 @@ import Maps from './Map'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 import './styles/Home.css';
+
 class App extends Component {
   // open navigation button
   openNav() {
@@ -14,6 +15,7 @@ class App extends Component {
   closeNav() {
     document.getElementById("mySidenav").style.width = "0";
   }
+
 
   render() {
     return (
