@@ -148,8 +148,8 @@ export class Maps extends Component {
     {/* show all locations in nav by default */}
     const search = []
     for (var i = 0; i < this.state.markers.length; i++) {
-      const title = this.state.markers[i].title.toLowerCase()
-      if(title.includes(this.state.query)){
+      const title = this.state.markers[i].title
+      if(title.toLowerCase().includes(this.state.query.toLowerCase()) || title.toLowerCase().includes(this.state.query)){
           search.push(this.state.markers[i])
       } else {
 
@@ -159,7 +159,7 @@ export class Maps extends Component {
     if(this.state.query){
       for (var i = 0; i < this.state.markers.length; i++) {
         {/* show marker if it matches search query */}
-        if(this.state.markers[i].title.toLowerCase().includes(this.state.query.toLowerCase())){
+        if(this.state.markers[i].title.toLowerCase().includes(this.state.query.toLowerCase()) ||this.state.markers[i].title.includes(this.state.query)){
           this.state.markers[i].setVisible(true);
         } else {
           {/* hide marker if it does not match search query*/}
