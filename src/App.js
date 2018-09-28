@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react'
+import {GoogleApiWrapper} from 'google-maps-react'
 import Maps from './Map'
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
 import './styles/Home.css';
 
 class App extends Component {

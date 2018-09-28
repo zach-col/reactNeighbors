@@ -1,17 +1,10 @@
 import React, { Component}  from 'react';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react'
 import './styles/Home.css';
-import ReactDOM from 'react-dom';
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
-
-
 export class Maps extends Component {
 
-
-gm_authFailure(){
-    alert("You Must Enter A Valid Google API Key")
-}
+  gm_authFailure(){
+      alert("You Must Enter A Valid Google API Key")
+  }
   state = {
     locations: [
           {"id": "01", title: 'Park Ave Penthouse', info: 'no', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -49,11 +42,13 @@ gm_authFailure(){
     })
     this.setState({map: this.map})
   }
+  // fetch foursquare data
   markerDemo(){
     return  fetch('https://api.foursquare.com/v2/venues/explore?client_id=UE5J2YQR0H21JC5PSRFVRR3ALNJYBAJPFCNH4VD2TQBRESFC&client_secret=3UYPCCJFLXKTWZUPG01H20IAEAQTULCOSST2QDIJR34H5RGP&v=20180323&limit=1&ll=40.7243,-74.0018&query=coffee&limit=1')
     .then((res) => { return res.json()})
     .then((result) => {
-
+      this.setState({item: result['response'].headerFullLocation})
+      console.log(this.state.item)
       return result['response'].headerFullLocation
     })
   }
@@ -64,18 +59,15 @@ gm_authFailure(){
     var bounds = new window.google.maps.LatLngBounds();
 
     for (var i = 0; i< this.state.locations.length; i++) {
-    this.markerDemo().then(result => {
-      console.log(result + " is a " + typeof result)
-      this.setState({items: "test if woking"})
-    })
-      // Get the position from the location array.
-      const position = this.state.locations[i].location;
-      const title = this.state.locations[i].title;
+    // set item to foursuare data
+    this.markerDemo()
+    console.log("should show item header", this.state.item)
+
       // Create a marker per location, and put into markers array.
       const marker = new window.google.maps.Marker({
         position: {lat: this.state.locations[i].location.lat, lng: this.state.locations[i].location.lng},
         title: this.state.locations[i].title,
-        info: this.state.items,
+        info: this.state.item,
         animation: window.google.maps.Animation.DROP,
         id: this.state.locations[i].id
       });
@@ -177,8 +169,8 @@ gm_authFailure(){
       }
     } else {
     { /* if there is no query load all markers */}
-      for (var i = 0; i < this.state.markers.length; i++) {
-        this.state.markers[i].setVisible(true)
+      for (var z = 0; z < this.state.markers.length; z++) {
+        this.state.markers[z].setVisible(true)
       }
     }
 
