@@ -31,8 +31,6 @@ export class Maps extends Component {
     window.gm_authFailure = this.gm_authFailure;
     this.initMarkers()
     this.setState({searchQueryLocations: this.state.locations})
-
-
   }
   // load map
   initMap(){
@@ -43,14 +41,27 @@ export class Maps extends Component {
     this.setState({map: this.map})
   }
   // fetch foursquare data
-  markerDemo(){
-    return  fetch('https://api.foursquare.com/v2/venues/explore?client_id=UE5J2YQR0H21JC5PSRFVRR3ALNJYBAJPFCNH4VD2TQBRESFC&client_secret=3UYPCCJFLXKTWZUPG01H20IAEAQTULCOSST2QDIJR34H5RGP&v=20180323&limit=1&ll=40.7243,-74.0018&query=coffee&limit=1')
+  markerDemo(marker){
+    const searchQuery = marker.title
+    const start = 'https://api.foursquare.com/v2/venues/explore?client_id=UE5J2YQR0H21JC5PSRFVRR3ALNJYBAJPFCNH4VD2TQBRESFC&client_secret=3UYPCCJFLXKTWZUPG01H20IAEAQTULCOSST2QDIJR34H5RGP&v=20180323'
+    const near = '&near=new york'
+    const query = '&query=' + searchQuery
+    const limit = '&limit=1'
+    const fourSquareUrl = start + near + query + limit
+    return  fetch(fourSquareUrl)
     .then((res) => { return res.json()})
     .then((result) => {
-      this.setState({item: result['response'].headerFullLocation})
-      console.log(this.state.item)
-      return result['response'].headerFullLocation
+      const first = result['response']['groups'][0].items[0].venue.name
+      const second = result['response']['groups'][0].items[0].venue.location.address
+      const third = result['response']['groups'][0].items[0].venue.hereNow.summary
+      const space = " "
+      const final = first + space + second + space + third
+      this.setState({item: final})
+      alert(this.state.item)
     })
+    .catch(function(e) {
+        console.log("check your foursquare API", e)
+    });
   }
 
   // load markers
@@ -59,8 +70,8 @@ export class Maps extends Component {
     var bounds = new window.google.maps.LatLngBounds();
 
     for (var i = 0; i< this.state.locations.length; i++) {
+
     // set item to foursuare data
-    this.markerDemo()
     console.log("should show item header", this.state.item)
 
       // Create a marker per location, and put into markers array.
@@ -99,6 +110,7 @@ export class Maps extends Component {
 
 
   populateInfoWindow = (marker) => {
+    this.markerDemo(marker)
     // set clicked marker to selected place then check if its active marker
     this.setState(this.state.selectedPlace: marker)
     if(this.state.selectedPlace === this.state.activeMarker){
@@ -110,12 +122,12 @@ export class Maps extends Component {
         if(marker === this.state.markers[i] ){
           // bounce marker
           marker.setAnimation(window.google.maps.Animation.BOUNCE);
-          marker.infowindow.open(this.map, marker);
+          setTimeout(function(){ marker.setAnimation(null); }, 750);
+
           this.setState({activeMarker: marker})
 
         } else{
-            // close info window
-            this.state.markers[i].infowindow.close();
+
             // stop bouncing
             this.state.markers[i].setAnimation(null);
         }
@@ -139,8 +151,8 @@ export class Maps extends Component {
   hrefMarkerLink = (marker) => {
     this.closeAllInfoWindows()
     marker.setAnimation(window.google.maps.Animation.BOUNCE);
-    marker.infowindow.open(this.map, marker);
-    console.log(marker)
+    setTimeout(function(){ marker.setAnimation(null); }, 750);
+    this.markerDemo(marker)
   }
 
   render() {
@@ -174,6 +186,7 @@ export class Maps extends Component {
       }
     }
 
+
       return (
       <div>
         <div className="container-fluid">
@@ -187,10 +200,15 @@ export class Maps extends Component {
                 {location.title}
               </a>
             ))}
+            {/* made with info icons */}
+            <p className="navInfo">Made with</p>
+            <a href="https://developers.google.com/maps/documentation/javascript/tutorial" target="_blank" className="fa fa-google" style={{fontSize: '36px', color:'#5498f6', display: 'inline-block'}}></a>&nbsp;&nbsp;&#43;
+            <a href="https://developer.foursquare.com/docs/api" target="_blank" className="fa fa-foursquare" style={{fontSize: '36px', color:'#e74578', display: 'inline-block'}}></a>
           </div>
           <div className="map" id="map">
           </div>
         </div>
+
       </div>
     );
   }

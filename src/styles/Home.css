@@ -60,3 +60,11 @@ html, body {
     height: 91vh;
 
 }
+.navInfo{
+    padding: 8px 8px 8px 32px;
+    font-size: 25px;
+    color: grey;
+}
+.navInfoIcon{
+    display: inline-block;
+}
