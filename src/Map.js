@@ -193,10 +193,10 @@ export class Maps extends Component {
           <span tabIndex="0" style={{fontSize: '6vh', cursor: 'pointer'}} onClick={this.props.openNav}>&#9776; Neighbors</span>
           <div id="mySidenav" className="sidenav">
             <a href="javascript:void(0)" className="closebtn" onClick={this.props.closeNav}>×</a>
-            <span style={{color: 'white', paddingRight: '10px', paddingLeft: '10px'}}>Search</span>
-            <input type="text" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
+            <span style={{color: 'white', paddingRight: '10px', paddingLeft: '32px'}}>Search</span>
+            <input type="text" className="navSearchBar" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
             {search.map((location) => (
-              <a key={location.id} className='restaurantName' onClick={(event) => this.hrefMarkerLink(location)}>
+              <a href="#" key={location.id} className='restaurantName' onClick={(event) => this.hrefMarkerLink(location)}>
                 {location.title}
               </a>
             ))}
@@ -205,7 +205,7 @@ export class Maps extends Component {
             <a href="https://developers.google.com/maps/documentation/javascript/tutorial" target="_blank" className="fa fa-google" style={{fontSize: '36px', color:'#5498f6', display: 'inline-block'}}></a>&nbsp;&nbsp;&#43;
             <a href="https://developer.foursquare.com/docs/api" target="_blank" className="fa fa-foursquare" style={{fontSize: '36px', color:'#e74578', display: 'inline-block'}}></a>
           </div>
-          <div className="map" id="map">
+          <div className="map" id="map" role="application">
           </div>
         </div>
 
