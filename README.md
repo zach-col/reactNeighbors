@@ -1,5 +1,7 @@
 # reactNeighbors
 
+created with Foursquare API and Google API
+
 To setup this project
 
 1 clone this repo $ git clone https://github.com/zach-col/reactNeighbors
