@@ -10,9 +10,9 @@ Created with Foursquare API and Google API
 
 3. Install packages $ npm install
 
-4. Replace the API key in src/App.js on line 29 with your own Google Maps API Key [Foursquare_API](https://developer.foursquare.com/docs/api)
+4. Replace the API key in src/App.js on line 29 with your own Google Maps API Key [Google_Maps_API](https://developers.google.com/maps/documentation/javascript/tutorial)
 
-5. Replace the API key in src/Map.js on line 77 with your own Foursquare API Key [Google_Maps_API](https://developers.google.com/maps/documentation/javascript/tutorial)
+5. Replace the API key in src/Map.js on line 77 with your own Foursquare API Key [Foursquare_API](https://developer.foursquare.com/docs/api)
 
 6. Start server $ yarn start
 
