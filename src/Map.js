@@ -1,10 +1,10 @@
 import React, { Component}  from 'react';
+import { Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import './styles/Home.css';
 export class Maps extends Component {
 
-  gm_authFailure(){
-      alert("You Must Enter A Valid Google API Key")
-  }
+  // state
   state = {
     locations: [
           {"id": "01", title: 'Park Ave Penthouse', info: 'no', location: {lat: 40.7713024, lng: -73.9632393}},
@@ -22,9 +22,37 @@ export class Maps extends Component {
     query: '',
     searchQueryLocations: [],
     infoWindow: {},
-    items: '',
+    locationName: '',
+    locationAddress: '',
+    locationUsersSignedIn: "",
     isLoaded: false,
+    show: false
   };
+
+  // bootstrap modal
+  constructor(props, context) {
+    super(props, context);
+
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  // close bootstrap modal
+  handleClose() {
+    this.setState({ show: false });
+  }
+
+  // open bootstrap modal
+  handleShow() {
+    this.setState({ show: true });
+  }
+
+  // google failure message
+
+  gm_authFailure(){
+      alert("You Must Enter A Valid Google API Key")
+  }
+
   // load map and markers on init load
   componentDidMount() {
     this.initMap()
@@ -32,6 +60,7 @@ export class Maps extends Component {
     this.initMarkers()
     this.setState({searchQueryLocations: this.state.locations})
   }
+
   // load map
   initMap(){
       this.map = new window.google.maps.Map(document.getElementById('map'), {
@@ -40,6 +69,7 @@ export class Maps extends Component {
     })
     this.setState({map: this.map})
   }
+
   // fetch foursquare data
   markerDemo(marker){
     const searchQuery = marker.title
@@ -51,13 +81,15 @@ export class Maps extends Component {
     return  fetch(fourSquareUrl)
     .then((res) => { return res.json()})
     .then((result) => {
-      const first = result['response']['groups'][0].items[0].venue.name
-      const second = result['response']['groups'][0].items[0].venue.location.address
-      const third = result['response']['groups'][0].items[0].venue.hereNow.summary
-      const space = " "
-      const final = first + space + second + space + third
-      this.setState({item: final})
-      alert(this.state.item)
+      const locationName = result['response']['groups'][0].items[0].venue.name
+      const locationAddress = result['response']['groups'][0].items[0].venue.location.address + ", " + result['response']['groups'][0].items[0].venue.location.city
+      const locationUsersSignedIn = result['response']['groups'][0].items[0].venue.hereNow.summary
+      this.setState({locationName})
+      this.setState({locationAddress})
+      this.setState({locationUsersSignedIn})
+      console.log(result['response']['groups'][0].items[0].venue)
+      // open pop up modal
+      this.handleShow();
     })
     .catch(function(e) {
         console.log("check your foursquare API", e)
@@ -70,10 +102,6 @@ export class Maps extends Component {
     var bounds = new window.google.maps.LatLngBounds();
 
     for (var i = 0; i< this.state.locations.length; i++) {
-
-    // set item to foursuare data
-    console.log("should show item header", this.state.item)
-
       // Create a marker per location, and put into markers array.
       const marker = new window.google.maps.Marker({
         position: {lat: this.state.locations[i].location.lat, lng: this.state.locations[i].location.lng},
@@ -108,7 +136,6 @@ export class Maps extends Component {
 
   }
 
-
   populateInfoWindow = (marker) => {
     this.markerDemo(marker)
     // set clicked marker to selected place then check if its active marker
@@ -127,17 +154,18 @@ export class Maps extends Component {
           this.setState({activeMarker: marker})
 
         } else{
-
             // stop bouncing
             this.state.markers[i].setAnimation(null);
         }
       }
     }    
   }
+
   // update search query state
   updateQuery = (query) => {
     this.setState({ query: query})
   }
+
   // close all infowindows and stop animation
   closeAllInfoWindows(){
     for (var i = 0; i < this.state.markers.length; i++) {
@@ -147,12 +175,23 @@ export class Maps extends Component {
       this.state.markers[i].setAnimation(null);
     }
   }
+
   /* show marker infowindow and animate if you click marker link */
   hrefMarkerLink = (marker) => {
     this.closeAllInfoWindows()
     marker.setAnimation(window.google.maps.Animation.BOUNCE);
     setTimeout(function(){ marker.setAnimation(null); }, 750);
     this.markerDemo(marker)
+  }
+
+  // close popup modal
+  close() {
+    this.setState({ showModal: false });
+  }
+
+  // open popup modal
+  open() {
+    this.setState({ showModal: true });
   }
 
   render() {
@@ -167,6 +206,7 @@ export class Maps extends Component {
 
       }
     }
+
     {/* show all markers on map by default */}
     if(this.state.query){
       for (var i = 0; i < this.state.markers.length; i++) {
@@ -186,14 +226,17 @@ export class Maps extends Component {
       }
     }
 
-
       return (
       <div>
         <div className="container-fluid">
+          {/* navbar button */}
           <span tabIndex="0" style={{fontSize: '6vh', cursor: 'pointer'}} onClick={this.props.openNav}>&#9776; Neighbors</span>
+          { this.state.item }
+          {/* navigation menu */}
           <div id="mySidenav" className="sidenav">
             <a href="javascript:void(0)" className="closebtn" onClick={this.props.closeNav}>×</a>
             <span style={{color: 'white', paddingRight: '10px', paddingLeft: '32px'}}>Search</span>
+            {/* search input */}
             <input type="text" className="navSearchBar" value={this.state.query} onChange={(event) => this.updateQuery(event.target.value)}/>
             {search.map((location) => (
               <a href="#" key={location.id} className='restaurantName' onClick={(event) => this.hrefMarkerLink(location)}>
@@ -202,12 +245,27 @@ export class Maps extends Component {
             ))}
             {/* made with info icons */}
             <p className="navInfo">Made with</p>
-            <a href="https://developers.google.com/maps/documentation/javascript/tutorial" target="_blank" className="fa fa-google" style={{fontSize: '36px', color:'#5498f6', display: 'inline-block'}}></a>&nbsp;&nbsp;&#43;
-            <a href="https://developer.foursquare.com/docs/api" target="_blank" className="fa fa-foursquare" style={{fontSize: '36px', color:'#e74578', display: 'inline-block'}}></a>
+            <a href="https://developers.google.com/maps/documentation/javascript/tutorial"  rel="noopener noreferrer" target="_blank" className="fa fa-google" style={{fontSize: '36px', color:'#5498f6', display: 'inline-block'}}></a>&nbsp;&nbsp;&#43;
+            <a href="https://developer.foursquare.com/docs/api" rel="noopener noreferrer" target="_blank" className="fa fa-foursquare" style={{fontSize: '36px', color:'#e74578', display: 'inline-block'}}></a>
           </div>
           <div className="map" id="map" role="application">
           </div>
         </div>
+
+        {/* bootstrap popup modal */}
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Created with Foursquare</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>{this.state.locationName} details</h4>
+            <p>Address: {this.state.locationAddress}</p>
+            <p>Users Signed In: { this.state.locationUsersSignedIn }</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.handleClose}>Close</Button>
+          </Modal.Footer>
+        </Modal>
 
       </div>
     );
