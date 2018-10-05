@@ -25,5 +25,6 @@ class App extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: ('AIzaSyBVoR4zb_hPaWYftpFW1EFWn12SCQePXjo')
+  // replace with your own Google Maps API Key
+  apiKey: ('PLACE_GOOGLE_API_KEY_HERE')
 })(App)

@@ -1,16 +1,20 @@
 # reactNeighbors
 
-created with Foursquare API and Google API
+Created with Foursquare API and Google API
 
 # Setup
 
-1. clone this repo $ git clone https://github.com/zach-col/reactNeighbors
+1. Clone this repo $ git clone https://github.com/zach-col/reactNeighbors
 
-2. cd to cloned directory $ cd reactNeighbors
+2. Cd to cloned directory $ cd reactNeighbors
 
-3. install packages $ npm install
+3. Install packages $ npm install
 
-4. start server $ yarn start
+4. Replace the API key in src/App.js on line 29 with your own Google Maps API Key [Foursquare_API](https://developer.foursquare.com/docs/api)
+
+5. Replace the API key in src/Map.js on line 77 with your own Foursquare API Key [Google_Maps_API](https://developers.google.com/maps/documentation/javascript/tutorial)
+
+6. Start server $ yarn start
 
 # Resources used
 - https://stackoverflow.com/questions/34424845/adding-script-tag-to-react-jsx

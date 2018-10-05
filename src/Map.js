@@ -73,7 +73,8 @@ export class Maps extends Component {
   // fetch foursquare data
   markerDemo(marker){
     const searchQuery = marker.title
-    const start = 'https://api.foursquare.com/v2/venues/explore?client_id=UE5J2YQR0H21JC5PSRFVRR3ALNJYBAJPFCNH4VD2TQBRESFC&client_secret=3UYPCCJFLXKTWZUPG01H20IAEAQTULCOSST2QDIJR34H5RGP&v=20180323'
+    // replace with your own Foursquare id and client secret
+    const start = 'https://api.foursquare.com/v2/venues/explore?client_id=PLACE_CLIENT_ID_HERE&client_secret=PLACE_CLIENT_SECRET_HERE&v=20180323'
     const near = '&near=new york'
     const query = '&query=' + searchQuery
     const limit = '&limit=1'
