@@ -27,3 +27,4 @@ created with Foursquare API and Google API
 - https://stackoverflow.com/questions/6629728/check-if-a-string-has-a-certain-piece-of-text
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
 - https://stackoverflow.com/questions/9554595/how-to-access-foursquare-userless-venues-api-v2-via-json
+- https://react-bootstrap.github.io/components/modal/#modals
